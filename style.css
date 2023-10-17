@@ -36,7 +36,7 @@ section {
 
 #productWrap {
     width: 100%;
-    background: #eee;
+    /* background: #eee; */
 }
 
 #searchInput {
@@ -44,7 +44,6 @@ section {
     width: 200px;
     height: 30px;
     padding-left: 5px;
-    border-radius: 5px;
     border: 1px solid #ccc;
 }
 
@@ -60,7 +59,7 @@ section {
 .productIn {
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     overflow-x: auto;
 }
 
@@ -80,17 +79,48 @@ section {
 
 .productIn li img {
     width: 100%;
-    margin-bottom: 30px;
+    min-height: 250px;
+    margin-bottom: 10px;
 }
 
-.productIn li button {
+.productIn li {
+    display: flex;
+    flex-direction: column;
+}
+
+.productIn li h4 {
+    font-size: 14px;
+}
+
+.productIn li span {
+    margin: 5px 0 10px 0;
+    font-size: 16px;
+}
+
+.productIn li h3 {
+    align-self: flex-end;
+    font-size: 20px;
+}
+
+.add-to-cart {
+    margin-top: 10px;
+    align-self: flex-end;
     cursor: pointer;
-    float: right;
     width: 60px;
     height: 30px;
+    background-color: #fefefe;
+    color: #333;
+    border: 1px solid #333;
+}
+
+.add-to-cart:hover {
     background-color: #333;
     color: #fefefe;
-    border: none;
+}
+
+.add-to-cart:active {
+    background-color: #555;
+    color: #fefefe;
 }
 
 #cartWrap {
@@ -123,15 +153,19 @@ section {
 }
 
 .cartTit>li:nth-child(1) {
-    width: 60%;
+    width: 55%;
 }
 
 .cartTit>li:nth-child(2) {
-    width: 20%;
+    width: 15%;
 }
 
 .cartTit>li:nth-child(3) {
-    width: 20%;
+    width: 15%;
+}
+
+.cartTit>li:nth-child(4) {
+    width: 15%;
 }
 
 .cartUl {
@@ -158,7 +192,7 @@ section {
     display: flex;
     justify-content: flex-start;
     padding-left: 30px;
-    width: 60%;
+    width: 55%;
 }
 
 .cartItem li:nth-child(1)>img {
@@ -181,12 +215,12 @@ section {
 }
 
 .cartItem li:nth-child(2) {
-    width: 20%;
+    width: 15%;
 }
 
 /* 수량 */
 .cartItem li:nth-child(3) {
-    width: 20%;
+    width: 15%;
 }
 
 .cartItem li:nth-child(3) button {
@@ -198,6 +232,8 @@ section {
     height: 25px;
     border: 1px solid #ccc;
     background: none;
+    font-size: 16px;
+    color: #555;
 }
 
 .cartItem li:nth-child(3) span {
@@ -212,6 +248,9 @@ section {
     background: none;
 }
 
+.cartItem li:nth-child(4) {
+    width: 15%;
+}
 
 .cartDrag .totalPrice {
     display: flex;

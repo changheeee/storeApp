@@ -30,6 +30,7 @@
                 <li>상품</li>
                 <li>상품금액</li>
                 <li>수량</li>
+                <li>총액</li>
             </ul>
             <ul class="cartUl"></ul>
             <span class="totalPrice"></span>
@@ -38,27 +39,24 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            //Mock Server
-            // const productJSON = "https://e2b7f9c0-20f2-48cf-8037-e93a5743b0e9.mock.pstmn.io/cart";
             const productJSON = "./js_project/store.json";
 
             fetch(productJSON)
-                .then(function (response) { // 웹 리소스 가져오기
-                    // 웹 리소스 요청이 성공했을 때 실행될 함수
+                .then(function (response) {
                     if (response.status === 200) {
-                        return response.json(); // JSON 데이터를 파싱하여 반환
+                        return response.json();
                     } else {
                         throw new Error('데이터를 가져오는 중 오류 발생');
                     }
                 })
-                .then(function (data) { // JSON 데이터를 성공적으로 가져온 후 실행될 함수
+                .then(function (data) {
                     const productWrap = document.querySelector(".productIn");
                     const searchInput = document.querySelector("#searchInput");
                     const cart = [];
                     const cartUl = document.querySelector(".cartUl");
                     const totalPrice = document.querySelector('.totalPrice');
 
-                    //  가격 세자리단위 , 표시
+                    // 가격 세자리 단위 , 표시
                     function formatRevenue(revenue) {
                         if (typeof revenue === 'number') {
                             return revenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -67,16 +65,15 @@
                         }
                     }
 
-
                     // 중복 상품 체크와 수량 조절을 위한 함수
                     function addOrUpdateCartItem(product) {
                         const existingCartItem = cart.find((item) => item.id === product.id);
                         if (existingCartItem) {
-                            existingCartItem.quantity++; // 이미 장바구니에 있는 경우 수량 증가
+                            existingCartItem.quantity++;
                             updateCartDisplay();
                             alert("이미 장바구니에 있는 상품입니다.");
                         } else {
-                            product.quantity = 1; // 장바구니에 처음 추가되는 경우 수량 1로 설정
+                            product.quantity = 1;
                             cart.push(product);
                             updateCartDisplay();
                         }
@@ -117,17 +114,16 @@
                                     <span>${cartProduct.quantity}</span>
                                     <button class="increase-quantity" data-id="${cartProduct.id}">+</button>
                                 </li>
+                                <li>${formatRevenue(cartProduct.price * cartProduct.quantity)} 원</li>
                             </ul>
                             `;
                             cartUl.appendChild(li);
                             total_price += cartProduct.price * cartProduct.quantity;
 
-                            // 수량 증가 버튼 리스너 추가
                             li.querySelector(".increase-quantity").addEventListener("click", function () {
                                 changeCartItemQuantity(cartProduct.id, "increase");
                             });
 
-                            // 수량 감소 버튼 리스너 추가
                             li.querySelector(".decrease-quantity").addEventListener("click", function () {
                                 changeCartItemQuantity(cartProduct.id, "decrease");
                             });
@@ -136,24 +132,54 @@
                         totalPrice.textContent = `합계: ${formatRevenue(total_price)}원`
                     }
 
+                    // 검색어 하이라이트
+                    function highlightSearchResults(searchValue, text) {
+                        const index = text.toLowerCase().indexOf(searchValue);
+                        if (index !== -1) {
+                            const before = text.substring(0, index);
+                            const match = text.substring(index, index + searchValue.length);
+                            const after = text.substring(index + searchValue.length);
+                            return `${before}<span class="highlight">${match}</span>${after}`;
+                        }
+                        return text;
+                    }
+
+                    function filterProducts(searchValue) {
+                        const productListItems = document.querySelectorAll(".productIn li");
+                        productListItems.forEach(function (item) {
+                            const title = item.querySelector("h5").textContent.toLowerCase();
+                            const brand = item.querySelector("span").textContent.toLowerCase();
+
+                            if (title.includes(searchValue) || brand.includes(searchValue)) {
+                                item.style.display = "flex";
+                                item.querySelector("h5").innerHTML = highlightSearchResults(searchValue, title);
+                                item.querySelector("span").innerHTML = highlightSearchResults(searchValue, brand);
+                            } else {
+                                item.style.display = "none";
+                            }
+                        });
+                    }
+
+                    // 검색어 입력 이벤트 리스너 추가
+                    searchInput.addEventListener("keyup", function () {
+                        const searchValue = searchInput.value.toLowerCase();
+                        filterProducts(searchValue);
+                    });
+
                     // JSON 데이터에서 제품 정보를 가져와 리스트에 추가
                     data.products.forEach(function (product) {
-                        console.log(typeof product);
                         const li = document.createElement("li");
-
                         li.innerHTML = `
-                            <img src="./js_project/${product.photo}" alt="${product.title}">
-                            <div>
-                                <h4>${product.title}</h4>
-                                <p>${product.brand}</p>
-                                <p>가격: ${formatRevenue(product.price)}원</p>
-                            </div>
+                                    <img src="./js_project/${product.photo}" alt="${product.title}">
+                                    <h4>[${product.brand}]</h4>
+                                    <span>${product.title}</span>
+                                    <h3>${formatRevenue(product.price)}원</h3>
+                                    <button class="add-to-cart" data-id="${product.id}">담기</button>
                         `;
 
-                        const addBtn = document.createElement("button");
-                        addBtn.innerText = '담기';
-                        addBtn.addEventListener('click', () => addOrUpdateCartItem(product));
-                        li.appendChild(addBtn);
+                        li.querySelector(".add-to-cart").addEventListener("click", function () {
+                            addOrUpdateCartItem(product);
+                        });
 
                         productWrap.appendChild(li);
                     });
