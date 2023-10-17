@@ -132,7 +132,7 @@
                         totalPrice.textContent = `합계: ${formatRevenue(total_price)}원`
                     }
 
-                    // 검색어 하이라이트
+                    //검색어 하이라이트
                     function highlightSearchResults(searchValue, text) {
                         const index = text.toLowerCase().indexOf(searchValue);
                         if (index !== -1) {
@@ -147,13 +147,13 @@
                     function filterProducts(searchValue) {
                         const productListItems = document.querySelectorAll(".productIn li");
                         productListItems.forEach(function (item) {
-                            const title = item.querySelector("h5").textContent.toLowerCase();
-                            const brand = item.querySelector("span").textContent.toLowerCase();
+                            const title = item.querySelector("h4").textContent.toLowerCase();
+                            const brand = item.querySelector("p").textContent.toLowerCase();
 
                             if (title.includes(searchValue) || brand.includes(searchValue)) {
                                 item.style.display = "flex";
-                                item.querySelector("h5").innerHTML = highlightSearchResults(searchValue, title);
-                                item.querySelector("span").innerHTML = highlightSearchResults(searchValue, brand);
+                                item.querySelector("h4").innerHTML = highlightSearchResults(searchValue, title);
+                                item.querySelector("p").innerHTML = highlightSearchResults(searchValue, brand);
                             } else {
                                 item.style.display = "none";
                             }
@@ -172,8 +172,10 @@
                         li.innerHTML = `
                                     <img src="./js_project/${product.photo}" alt="${product.title}">
                                     <h4>[${product.brand}]</h4>
-                                    <span>${product.title}</span>
+                                    <p>${product.title}</p>
                                     <h3>${formatRevenue(product.price)}원</h3>
+
+                                    
                                     <button class="add-to-cart" data-id="${product.id}">담기</button>
                         `;
 
