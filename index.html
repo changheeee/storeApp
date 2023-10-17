@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>집꾸미기 스토어</title>
+</head>
+
+<body>
+    <header>
+        <h1>집꾸미기</h1>
+        <nav>
+            <a href="">Home</a>
+            <a href="">스토어</a>
+            <a href="">시공견적</a>
+        </nav>
+    </header>
+
+    <section id="productWrap">
+        <input type="text" id="searchInput" placeholder="검색어 입력">
+        <ul class="productIn"></ul>
+    </section>
+
+    <section id="cartWrap">
+        <h3>장바구니</h3>
+        <div class="cartDrag">
+            <ul class="cartTit">
+                <li>상품</li>
+                <li>상품금액</li>
+                <li>수량</li>
+            </ul>
+            <ul class="cartUl"></ul>
+            <span class="totalPrice"></span>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            //Mock Server
+            // const productJSON = "https://e2b7f9c0-20f2-48cf-8037-e93a5743b0e9.mock.pstmn.io/cart";
+            const productJSON = "./js_project/store.json";
+
+            fetch(productJSON)
+                .then(function (response) { // 웹 리소스 가져오기
+                    // 웹 리소스 요청이 성공했을 때 실행될 함수
+                    if (response.status === 200) {
+                        return response.json(); // JSON 데이터를 파싱하여 반환
+                    } else {
+                        throw new Error('데이터를 가져오는 중 오류 발생');
+                    }
+                })
+                .then(function (data) { // JSON 데이터를 성공적으로 가져온 후 실행될 함수
+                    const productWrap = document.querySelector(".productIn");
+                    const searchInput = document.querySelector("#searchInput");
+                    const cart = [];
+                    const cartUl = document.querySelector(".cartUl");
+                    const totalPrice = document.querySelector('.totalPrice');
+
+                    //  가격 세자리단위 , 표시
+                    function formatRevenue(revenue) {
+                        if (typeof revenue === 'number') {
+                            return revenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        } else {
+                            return "N/A";
+                        }
+                    }
+
+
+                    // 중복 상품 체크와 수량 조절을 위한 함수
+                    function addOrUpdateCartItem(product) {
+                        const existingCartItem = cart.find((item) => item.id === product.id);
+                        if (existingCartItem) {
+                            existingCartItem.quantity++; // 이미 장바구니에 있는 경우 수량 증가
+                            updateCartDisplay();
+                            alert("이미 장바구니에 있는 상품입니다.");
+                        } else {
+                            product.quantity = 1; // 장바구니에 처음 추가되는 경우 수량 1로 설정
+                            cart.push(product);
+                            updateCartDisplay();
+                        }
+                    }
+
+                    // 상품 수량을 조절하는 함수
+                    function changeCartItemQuantity(productId, change) {
+                        const existingCartItem = cart.find((item) => item.id === productId);
+                        if (existingCartItem) {
+                            if (change === "increase") {
+                                existingCartItem.quantity++;
+                            } else if (change === "decrease" && existingCartItem.quantity > 1) {
+                                existingCartItem.quantity--;
+                            }
+                            updateCartDisplay();
+                        }
+                    }
+
+                    // 장바구니 업데이트
+                    function updateCartDisplay() {
+                        let total_price = 0;
+                        cartUl.innerHTML = '';
+
+                        cart.forEach(function (cartProduct) {
+                            const li = document.createElement('li');
+                            li.innerHTML = `
+                            <ul class="cartItem">
+                                <li>
+                                <img src="./js_project/${cartProduct.photo}" alt="${cartProduct.title}">
+                                <span>[${cartProduct.brand}]</span>
+                                <h5>${cartProduct.title}</h5>   
+                                </li>
+                                <li>
+                                    <p>${formatRevenue(cartProduct.price)}원</p>
+                                </li>
+                                <li>
+                                    <button class="decrease-quantity" data-id="${cartProduct.id}">-</button>
+                                    <span>${cartProduct.quantity}</span>
+                                    <button class="increase-quantity" data-id="${cartProduct.id}">+</button>
+                                </li>
+                            </ul>
+                            `;
+                            cartUl.appendChild(li);
+                            total_price += cartProduct.price * cartProduct.quantity;
+
+                            // 수량 증가 버튼 리스너 추가
+                            li.querySelector(".increase-quantity").addEventListener("click", function () {
+                                changeCartItemQuantity(cartProduct.id, "increase");
+                            });
+
+                            // 수량 감소 버튼 리스너 추가
+                            li.querySelector(".decrease-quantity").addEventListener("click", function () {
+                                changeCartItemQuantity(cartProduct.id, "decrease");
+                            });
+                        })
+
+                        totalPrice.textContent = `합계: ${formatRevenue(total_price)}원`
+                    }
+
+                    // JSON 데이터에서 제품 정보를 가져와 리스트에 추가
+                    data.products.forEach(function (product) {
+                        console.log(typeof product);
+                        const li = document.createElement("li");
+
+                        li.innerHTML = `
+                            <img src="./js_project/${product.photo}" alt="${product.title}">
+                            <div>
+                                <h4>${product.title}</h4>
+                                <p>${product.brand}</p>
+                                <p>가격: ${formatRevenue(product.price)}원</p>
+                            </div>
+                        `;
+
+                        const addBtn = document.createElement("button");
+                        addBtn.innerText = '담기';
+                        addBtn.addEventListener('click', () => addOrUpdateCartItem(product));
+                        li.appendChild(addBtn);
+
+                        productWrap.appendChild(li);
+                    });
+                })
+                .catch(function (error) {
+                    console.error("JSON 파일을 가져오는 중 오류 발생: " + error);
+                });
+        });
+    </script>
+</body>
+
+</html>

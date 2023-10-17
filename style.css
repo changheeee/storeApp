@@ -1,0 +1,220 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul,
+li {
+    list-style: none;
+
+}
+
+a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #fefefe;
+}
+
+header {
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: #000;
+    color: #fefefe;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: normal;
+}
+
+section {
+    padding: 30px;
+}
+
+#productWrap {
+    width: 100%;
+    background: #eee;
+}
+
+#searchInput {
+    margin-bottom: 30px;
+    width: 200px;
+    height: 30px;
+    padding-left: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#searchInput:focus {
+    outline: 1.5px solid #555;
+}
+
+.highlight {
+    background-color: yellow;
+
+}
+
+.productIn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+}
+
+.productIn li {
+    width: 23%;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #fefefe;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.productIn li:last-child {
+    margin-right: 0;
+}
+
+.productIn li img {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.productIn li button {
+    cursor: pointer;
+    float: right;
+    width: 60px;
+    height: 30px;
+    background-color: #333;
+    color: #fefefe;
+    border: none;
+}
+
+#cartWrap {
+    background: #fefefe;
+}
+
+
+
+.cartDrag {
+    position: relative;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: #fefefe;
+}
+
+
+.cartTit {
+    display: flex;
+    border-top: 2px solid #555;
+    padding-top: 15px;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cartTit>li {
+    text-align: center;
+}
+
+.cartTit>li:nth-child(1) {
+    width: 60%;
+}
+
+.cartTit>li:nth-child(2) {
+    width: 20%;
+}
+
+.cartTit>li:nth-child(3) {
+    width: 20%;
+}
+
+.cartUl {
+    width: 100%;
+    margin-top: 10px;
+    padding-bottom: 40px;
+    border-top: 1px solid #ccc;
+}
+
+.cartItem {
+    display: flex;
+}
+
+.cartItem li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.cartItem li:nth-child(1) {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 30px;
+    width: 60%;
+}
+
+.cartItem li:nth-child(1)>img {
+    display: block;
+    width: 80px;
+    height: 80px;
+    margin-right: 50px;
+    border: 1px solid #ddd;
+}
+
+.cartItem li:nth-child(1)>span {
+    letter-spacing: -0.04em;
+    color: #555;
+    margin-right: 5px;
+}
+
+.cartItem li:nth-child(1)>h5 {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.cartItem li:nth-child(2) {
+    width: 20%;
+}
+
+/* 수량 */
+.cartItem li:nth-child(3) {
+    width: 20%;
+}
+
+.cartItem li:nth-child(3) button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #ccc;
+    background: none;
+}
+
+.cartItem li:nth-child(3) span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-right: none;
+    background: none;
+}
+
+
+.cartDrag .totalPrice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
